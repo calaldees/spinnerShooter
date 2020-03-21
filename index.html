@@ -1,0 +1,14 @@
+<html>
+	<head>
+		<title>spinnerShooter</title>
+	</head>
+	<body>
+		<canvas id="canvas"></canvas>
+		<script type="module">
+			var htmlCanvas = document.getElementById("canvas");
+			var offscreen = htmlCanvas.transferControlToOffscreen();
+			var worker = new Worker("main.js", { type: "module" });
+			worker.postMessage({canvas: offscreen}, [offscreen]);
+		</script>
+	</body>
+</html>
