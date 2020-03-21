@@ -1,16 +1,33 @@
 import {initState, incrementModel} from './model.js'
 import {render} from './render.js';
 
-onmessage = function(event) {
-    const canvas = event.data.canvas;
-    //const gl = canvas.getContext("webgl");
-    const ctx = canvas.getContext('2d');
-    const state = initState();
+var canvas;
+var ctx;
 
-    function main(time) {
+onmessage = function(event) {
+    if (event.data.message == 'canvas') {
+        canvas = event.data.canvas;
+        ctx = canvas.getContext('2d');
+        //const gl = canvas.getContext("webgl");
+    }
+    else if (event.data.message == 'resize') {
+        canvas.width = event.data.width;
+        canvas.height = event.data.height;
+    }
+    else if (event.data.message == 'input') {
+        console.log(`input ${JSON.stringify(event.data, null, "  ")}`);
+    }
+    else {
+        console.warn(`unknown message type ${event.data.message}`);
+    }
+};
+
+const state = initState();
+function main(time) {
+    if (ctx) {
         incrementModel(state);
         render(ctx, state);
-        requestAnimationFrame(main);
     }
     requestAnimationFrame(main);
-};
+}
+requestAnimationFrame(main);
