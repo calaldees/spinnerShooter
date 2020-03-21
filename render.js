@@ -7,5 +7,5 @@ export function render(ctx, state) {
 }
 
 export default {
-	render,
+    render,
 }

@@ -1,8 +1,8 @@
 import {initState, incrementModel} from './model.js'
 import {render} from './render.js';
 
-onmessage = function(evt) {
-    const canvas = evt.data.canvas;
+onmessage = function(event) {
+    const canvas = event.data.canvas;
     //const gl = canvas.getContext("webgl");
     const ctx = canvas.getContext('2d');
     const state = initState();
