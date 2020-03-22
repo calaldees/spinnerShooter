@@ -20,28 +20,53 @@
 	<body>
 		<canvas id="canvas"></canvas>
 		<script type="module">
-			var htmlCanvas = document.getElementById("canvas");
-			var canvas = htmlCanvas.transferControlToOffscreen();
+			const htmlCanvas = document.getElementById("canvas");
+			let canvas = htmlCanvas.transferControlToOffscreen();
 			canvas.width = window.innerWidth;
 			canvas.height = window.innerHeight;
 
-			var worker = new Worker("main.js", {type: "module"});
+			const worker = new Worker("main.js", {type: "module"});
 			worker.postMessage({message: 'init', canvas: canvas}, [canvas]);
 
+			htmlCanvas.addEventListener('click', (e) => {
+				htmlCanvas.requestPointerLock();
+			}, false);
 			window.addEventListener('resize', () => {
 				worker.postMessage({message: 'resize', width: window.innerWidth, height: window.innerHeight});
 			}, false);
 
 			document.addEventListener("pointermove", (e) => {
-				worker.postMessage({message: 'input', s1: e.movementX, s2: e.movementY});
+				worker.postMessage({message: 'input', spinner1: e.movementX, spinner2: e.movementY});
 			}, false);
 
-			function setRunning(running) {
-				worker.postMessage({message: 'pause', running: running});
+			const input_key_mapping = {
+				'w': 'p1_thrust',
+				's': 'p1_shoot',
+			};
+			const input_state = {...Object.values(input_key_mapping).reduce((acc, item) => {
+				acc[item] = false;
+				return acc;
+			}, {})};
+			function updateInput(e, active) {
+				if (e.key in input_key_mapping) {
+					input_state[input_key_mapping[e.key]] = active;
+					worker.postMessage({message: 'input', ...input_state});
+				}
 			}
-			//document.addEventListener("visibilitychange", () => {setRunning(!document.hidden)}, false);
+			document.addEventListener('keydown', (e) => {updateInput(e, true);});
+			document.addEventListener('keyup', (e) => {updateInput(e, false);});
+
+			function setRunning(running) {worker.postMessage({message: 'pause', running: running});}
 			window.addEventListener("focus", () => {setRunning(true)}, false);
 			window.addEventListener("blur", () => {setRunning(false)}, false);
+			//document.addEventListener("visibilitychange", () => {setRunning(!document.hidden)}, false);
+
+			document.addEventListener('pointerlockchange', (e) => {
+				console.log(`pointerlock ${document.pointerLockElement}`);
+			}, false);
+			document.addEventListener('pointerlockerror', (e) => {
+				console.error('pointerlockerror', e);
+			}, false);
 
 			// https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API
 			//document.addEventListener("mousemove", (e) => {
