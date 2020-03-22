@@ -6,6 +6,7 @@ var canvas;
 var ctx;
 const state = initState();
 
+const spinner_calibration_factor = 0.01;
 
 onmessage = function(event) {
     if (event.data.message == 'init') {
@@ -19,7 +20,8 @@ onmessage = function(event) {
         canvas.height = event.data.height;
     }
     else if (event.data.message == 'input' && running) {
-        console.log(`input ${JSON.stringify(event.data, null, "  ")}`);
+        //console.log(`input ${JSON.stringify(event.data, null, "  ")}`);
+        state.players.s1 += (event.data.s1 * (Math.PI * spinner_calibration_factor)) % (Math.PI * 2);
     }
     else if (event.data.message == 'pause') {
         running = event.data.running;
