@@ -13,10 +13,12 @@ Technology
 ----------
 
 * I intend to use es201X without transpiration or external library's
+    * (Canvas)[https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial]
     * OffscreenCanvas
         * https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas
         * https://developers.google.com/web/updates/2018/08/offscreen-canvas
     * PointerLock
+        * https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events
         * https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API
         * I don't know if browsers support multiple pointers. Investigation needed
 

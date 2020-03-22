@@ -10,7 +10,7 @@
 				overflow: hidden; /*  Disable scrollbars */
 				display: block;  /* No floating content on sides */
 			}
-			#canvas {
+			canvas {
 				position:absolute;
 				left: 0px;
 				top: 0px;
@@ -26,13 +26,22 @@
 			canvas.height = window.innerHeight;
 
 			var worker = new Worker("main.js", {type: "module"});
-			worker.postMessage({message: 'canvas', canvas: canvas}, [canvas]);
+			worker.postMessage({message: 'init', canvas: canvas}, [canvas]);
+
 			window.addEventListener('resize', () => {
-				worker.postMessage({message: 'resize', width: window.innerWidth, height: window.innerHeight}, []);
+				worker.postMessage({message: 'resize', width: window.innerWidth, height: window.innerHeight});
 			}, false);
+
 			document.addEventListener("pointermove", (e) => {
-				worker.postMessage({message: 'input', s1: e.movementX, s2: e.movementY}, []);
+				worker.postMessage({message: 'input', s1: e.movementX, s2: e.movementY});
 			}, false);
+
+			function setRunning(running) {
+				worker.postMessage({message: 'pause', running: running});
+			}
+			//document.addEventListener("visibilitychange", () => {setRunning(!document.hidden)}, false);
+			window.addEventListener("focus", () => {setRunning(true)}, false);
+			window.addEventListener("blur", () => {setRunning(false)}, false);
 
 			// https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API
 			//document.addEventListener("mousemove", (e) => {
