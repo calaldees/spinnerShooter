@@ -79,10 +79,12 @@ function moveUnits(units) {
 }
 
 function applyForce(u) {
-    u.vx = (u.fx / u.mass);
-    u.vy = (u.fy / u.mass);
+    u.vx += (u.fx / u.mass);
+    u.vy += (u.fy / u.mass);
     u.x += u.vx;
     u.y += u.vy;
+    u.fx = 0;
+    u.fy = 0;
 }
 
 function applyThrustForce(u) {

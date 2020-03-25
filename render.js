@@ -25,8 +25,8 @@ function ship(ctx, u) {
     ctx.fillStyle = 'red';
     ctx.moveTo(x, y);
     ctx.lineTo(
-        x - Math.sin(angle) * s,
-        y - Math.cos(angle) * s,
+        x + Math.sin(angle) * s,
+        y + Math.cos(angle) * s,
     );
     ctx.stroke();
 }
