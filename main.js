@@ -1,4 +1,5 @@
-import {initState, incrementModel} from './model.js'
+import {} from './core.js';
+import {initState, incrementModel} from './model.js';
 import {render} from './render.js';
 
 var running = true;
@@ -6,8 +7,6 @@ var canvas;
 var ctx;
 const state = initState();
 
-const spinner_calibration_factor = (Math.PI * 1) / 360 ;
-//let cc = 0;
 
 onmessage = function(event) {
     if (event.data.message == 'init') {
@@ -22,15 +21,8 @@ onmessage = function(event) {
     }
     else if (event.data.message == 'input') {
         if (!running) {return}
+        state.input = {...state.input, ...event.data};
         //console.log(`input ${JSON.stringify(event.data, null, "  ")}`);
-        //cc += event.data.spinner1;
-        console.log(event.data);
-        for (let spinnerId of ['spinner1', 'spinner2', 'spinner3', 'spinner4']) {
-            if (spinnerId in state.players && event.data[spinnerId]) {
-                state.players[spinnerId] += (event.data[spinnerId] * spinner_calibration_factor);
-                state.players[spinnerId] = state.players[spinnerId] % (Math.PI * 2);
-            }
-        }
     }
     else if (event.data.message == 'pause') {
         running = event.data.running;

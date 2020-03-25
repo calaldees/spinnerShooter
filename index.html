@@ -36,17 +36,14 @@
 			}, false);
 
 			document.addEventListener("pointermove", (e) => {
-				worker.postMessage({message: 'input', spinner1: e.movementX, spinner2: e.movementY});
+				worker.postMessage({message: 'input', player1: e.movementX, player2: e.movementY});
 			}, false);
 
 			const input_key_mapping = {
-				'w': 'p1_thrust',
-				's': 'p1_shoot',
+				'w': 'player1_thrust',
+				's': 'player1_shoot',
 			};
-			const input_state = {...Object.values(input_key_mapping).reduce((acc, item) => {
-				acc[item] = false;
-				return acc;
-			}, {})};
+			const input_state = {...Object.values(input_key_mapping).reduce((acc, item) => {acc[item] = false; return acc;}, {})};
 			function updateInput(e, active) {
 				if (e.key in input_key_mapping) {
 					input_state[input_key_mapping[e.key]] = active;

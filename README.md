@@ -7,6 +7,11 @@ spinnerShooter
 * I realized that there are very few games that use 4 spinners
 * I decided to make one
 * This may be a mistake
+* Correction - this was a mistake
+* All spinner are identified by the primary mouse pointer by the OS and aggregated as a single pointer. I can only have 2 players (x-axis and y-axis).
+* My only hope is to proxy mouse input by usb device id to a virtual gamepad interface to be interpreted by Chrome
+* `usb-overdrive` for OSX may help, but I will to contact the author
+* I will continue with 2 players for now
 
 
 Technology

@@ -5,16 +5,16 @@ export function render(ctx, state) {
     ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
     ctx.fillRect(30, 30, 50, 50);
 
-   ship(ctx, 100,100, state.players.spinner1);
-   ship(ctx, 200,100, state.players.spinner2);
-   ship(ctx, 300,100, state.players.spinner3);
-   ship(ctx, 400,100, state.players.spinner4);
+    for (let player of ['player1', 'player2', 'player3', 'player4']) {
+        ship(ctx, state.units.players[player]);
+    }
+
 }
 
-function ship(ctx, x, y, d) {
-    x = Math.floor(x);
-    y = Math.floor(y);
-    d = d % Math.PI*2;
+function ship(ctx, u) {
+    const x = Math.floor(u.x);
+    const y = Math.floor(u.y);
+    const angle = u.angle;
     const s = 20;
 
     ctx.fillStyle = 'white';
@@ -25,8 +25,8 @@ function ship(ctx, x, y, d) {
     ctx.fillStyle = 'red';
     ctx.moveTo(x, y);
     ctx.lineTo(
-        x + Math.cos(d) * s,
-        y + Math.sin(d) * s,
+        x - Math.sin(angle) * s,
+        y - Math.cos(angle) * s,
     );
     ctx.stroke();
 }
