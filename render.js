@@ -6,7 +6,13 @@ export function render(ctx, state) {
     ctx.fillRect(30, 30, 50, 50);
 
     for (let player of ['player1', 'player2', 'player3', 'player4']) {
-        ship(ctx, state.units.players[player]);
+        ship(ctx, state.items.players[player]);
+    }
+
+    ctx.fillStyle = 'rgb(255, 255, 255)';
+    for (let p of state.items.projectiles) {
+        const s = Math.floor(p.size / 2);
+        ctx.fillRect(p.x-s, p.y-s, p.size, p.size);
     }
 
 }
@@ -29,6 +35,10 @@ function ship(ctx, u) {
         y + Math.cos(angle) * s,
     );
     ctx.stroke();
+}
+
+function projectile() {
+
 }
 
 export default {

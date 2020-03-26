@@ -16,8 +16,8 @@ onmessage = function(event) {
         requestAnimationFrame(main);
     }
     else if (event.data.message == 'resize') {
-        canvas.width = event.data.width;
-        canvas.height = event.data.height;
+        canvas.width = state.settings.display.width = event.data.width;
+        canvas.height = state.settings.display.height = event.data.height;
     }
     else if (event.data.message == 'input') {
         if (!running) {return}
