@@ -1,4 +1,7 @@
+import {previousValueIterator} from './core.js';
+
 export function render(ctx, state) {
+
     ctx.fillStyle = 'rgb(200, 0, 0)';
     ctx.fillRect(10, 10, 50, 50);
 
@@ -10,9 +13,9 @@ export function render(ctx, state) {
     }
 
     ctx.fillStyle = 'rgb(255, 255, 255)';
+    ctx.strokeStyle = 'rgb(255, 255, 255)';
     for (let p of state.items.projectiles) {
-        const s = Math.floor(p.size / 2);
-        ctx.fillRect(p.x-s, p.y-s, p.size, p.size);
+        projectile(ctx, p);
     }
 
 }
@@ -28,7 +31,7 @@ function ship(ctx, u) {
     ctx.arc(x, y, s, 0, Math.PI*2, false);
     ctx.fill();
 
-    ctx.fillStyle = 'red';
+    ctx.strokeStyle = 'red';
     ctx.moveTo(x, y);
     ctx.lineTo(
         x + Math.sin(angle) * s,
@@ -37,8 +40,15 @@ function ship(ctx, u) {
     ctx.stroke();
 }
 
-function projectile() {
-
+function projectile(ctx, p) {
+    const s = Math.floor(p.size / 2);
+    ctx.fillRect(p.x-s, p.y-s, p.size, p.size);
+    ctx.beginPath();
+    //ctx.moveTo(p.x, p.y);
+    for (let [x, y] of p._xy) {
+        ctx.lineTo(x, y);
+    }
+    ctx.stroke();
 }
 
 export default {

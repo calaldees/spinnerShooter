@@ -12,6 +12,7 @@ onmessage = function(event) {
     if (event.data.message == 'init') {
         canvas = event.data.canvas;
         ctx = canvas.getContext('2d', { alpha: false });
+        setpixelated(ctx);
         //const gl = canvas.getContext("webgl");
         requestAnimationFrame(main);
     }
@@ -47,3 +48,15 @@ function main(time) {
     }
 }
 
+
+function setpixelated(context) {
+    // https://stackoverflow.com/a/32798277/3356840
+    context['imageSmoothingEnabled'] = false;       /* standard */
+    context['mozImageSmoothingEnabled'] = false;    /* Firefox */
+    context['oImageSmoothingEnabled'] = false;      /* Opera */
+    context['webkitImageSmoothingEnabled'] = false; /* Safari */
+    context['msImageSmoothingEnabled'] = false;     /* IE */
+    // https://stackoverflow.com/a/3279863/3356840
+    context.translate(0.5, 0.5);
+
+}

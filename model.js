@@ -4,6 +4,7 @@ const TEMPLATES = {
     ITEM: {
         x: 0,
         y: 0,
+        _xy: [],
         vx: 0,
         vy: 0,
         fx: 0,
@@ -53,6 +54,9 @@ export function initState() {
             display: {
                 width: 0,
                 height: 0,
+            },
+            history: {
+                ticks: 3,
             },
             players: {
                 player1: {
@@ -126,6 +130,7 @@ function applyForces(items) {
         ...items.projectiles,
     ]) {
         applyForceToItem(item);
+        maintainHistory(item);
     }
 }
 function applyForceToItem(u) {
@@ -135,6 +140,12 @@ function applyForceToItem(u) {
     u.y += u.vy;
     u.fx = 0;
     u.fy = 0;
+}
+function maintainHistory(u, maxHistory=3) {
+    const history = u._xy;
+    if (history.unshift([u.x, u.y]) > maxHistory) {
+        history.pop();
+    }
 }
 
 function expireProjectiles(projectiles, display) {
