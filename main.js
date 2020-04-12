@@ -12,6 +12,8 @@ onmessage = function(event) {
     if (event.data.message == 'init') {
         canvas = event.data.canvas;
         ctx = canvas.getContext('2d', { alpha: false });
+        state.settings.display.width = canvas.width;
+        state.settings.display.height = canvas.height;
         setpixelated(ctx);
         //const gl = canvas.getContext("webgl");
         requestAnimationFrame(main);
@@ -56,7 +58,8 @@ function setpixelated(context) {
     context['oImageSmoothingEnabled'] = false;      /* Opera */
     context['webkitImageSmoothingEnabled'] = false; /* Safari */
     context['msImageSmoothingEnabled'] = false;     /* IE */
-    // https://stackoverflow.com/a/3279863/3356840
-    context.translate(0.5, 0.5);
 
+    // https://stackoverflow.com/a/3279863/3356840
+    // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors#A_lineWidth_example
+    context.translate(0.5, 0.5);
 }

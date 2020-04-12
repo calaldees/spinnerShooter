@@ -4,7 +4,7 @@ const TEMPLATES = {
     ITEM: {
         x: 0,
         y: 0,
-        _xy: [],
+        _xy: null,
         vx: 0,
         vy: 0,
         fx: 0,
@@ -82,7 +82,8 @@ export function initState() {
                 player3: initPlayer(3),
                 player4: initPlayer(4),
             }
-        }
+        },
+        tick: 0,
     };
 }
 
@@ -91,6 +92,7 @@ export function incrementModel(state) {
     state.input = {};
     applyForces(state.items);
     expireProjectiles(state.items.projectiles, state.settings.display);
+    state.tick += 1;
     return state;
 }
 
@@ -142,6 +144,7 @@ function applyForceToItem(u) {
     u.fy = 0;
 }
 function maintainHistory(u, maxHistory=3) {
+    if (u._xy == null) {u._xy=[];}  // Not very good. We check for creation on every tick
     const history = u._xy;
     if (history.unshift([u.x, u.y]) > maxHistory) {
         history.pop();
@@ -149,7 +152,7 @@ function maintainHistory(u, maxHistory=3) {
 }
 
 function expireProjectiles(projectiles, display) {
-    filterInPlace(projectiles, (p) => (
+    filterInPlace(projectiles, (p) => !(
         p.x < 0 ||
         p.y < 0 ||
         p.x > display.width ||

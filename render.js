@@ -2,8 +2,8 @@ import {previousValueIterator} from './core.js';
 
 export function render(ctx, state) {
 
-    ctx.fillStyle = 'rgb(200, 0, 0)';
-    ctx.fillRect(10, 10, 50, 50);
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, state.settings.display.width, state.settings.display.height);
 
     ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
     ctx.fillRect(30, 30, 50, 50);
@@ -44,7 +44,7 @@ function projectile(ctx, p) {
     const s = Math.floor(p.size / 2);
     ctx.fillRect(p.x-s, p.y-s, p.size, p.size);
     ctx.beginPath();
-    //ctx.moveTo(p.x, p.y);
+    ctx.moveTo(p.x, p.y);
     for (let [x, y] of p._xy) {
         ctx.lineTo(x, y);
     }
