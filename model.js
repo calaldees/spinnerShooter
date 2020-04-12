@@ -89,7 +89,7 @@ export function initState() {
 
 export function incrementModel(state) {
     processInput(state.input, state.items, state.settings.players);
-    state.input = {};
+    state.input = {...state.input, ...Object.keys(state.items.players).reduce((acc, player)=>{acc[player]=0; return acc;},{}) };
     applyForces(state.items);
     expireProjectiles(state.items.projectiles, state.settings.display);
     state.tick += 1;
@@ -104,7 +104,7 @@ export default {
 // Private ---------------------------------------------------------------------
 
 function processInput(input, items, player_settings) {
-    for (let playerId of ['player1', 'player2', 'player3', 'player4']) {
+    for (let playerId of Object.keys(items.players)) {
         const player = items.players[playerId];
         if (playerId in input && input[playerId]) {
             const spinner_calibration_factor = player_settings[playerId].spinner_calibration_factor || 0;
