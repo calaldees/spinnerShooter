@@ -1,4 +1,4 @@
-import {filterInPlace} from './core.js';
+import {range, filterInPlace} from './core.js';
 
 const TEMPLATES = {
     ITEM: {
@@ -10,6 +10,16 @@ const TEMPLATES = {
         fx: 0,
         fy: 0,
         mass: 0,
+    },
+    PARTICLES: {
+        thrust: {
+            size: 1,
+            mass: 1,
+            decay_colors: [],  // TODO
+            v: 3,
+            expire: 10,
+            random: 4,
+        },
     },
     PROJECTILES: {
         bullet: {
@@ -23,17 +33,32 @@ const TEMPLATES = {
     }
 };
 
-
-function initProjectile(player, template) {
-    return {
+function initParticle(template, origin, offset={}) {
+    const particle = {
         ...TEMPLATES.ITEM,
         ...template,
-        from: player,
-        x: player.x,
-        y: player.y,
-        vx: player.vx + (Math.sin(player.angle) * template.v),
-        vy: player.vy + (Math.cos(player.angle) * template.v),
+        x: origin.x,
+        y: origin.y,
+        vx: origin.vx,
+        vy: origin.vy,
     }
+    for (let [key, value] of Object.entries(offset)) {
+        if (key in particle) {particle[key] += value;}
+        else                 {particle[key] = value;}
+    }
+    return particle;
+}
+
+function initProjectile(template, player) {
+    return initParticle(
+        template,
+        player,
+        {
+            from: player,
+            vx: Math.sin(player.angle) * template.v,
+            vy: Math.cos(player.angle) * template.v,
+        },
+    );
 }
 function initPlayer(p) {
     p = p || 1;
@@ -75,6 +100,7 @@ export function initState() {
         },
         input: {},
         items: {
+            particles: [],
             projectiles: [],
             players: {
                 player1: initPlayer(1),
@@ -91,7 +117,8 @@ export function incrementModel(state) {
     processInput(state.input, state.items, state.settings.players);
     state.input = {...state.input, ...Object.keys(state.items.players).reduce((acc, player)=>{acc[player]=0; return acc;},{}) };
     applyForces(state.items);
-    expireProjectiles(state.items.projectiles, state.settings.display);
+    bounce(state.items, state.settings.display);
+    expire(state.items, state.settings.display);
     state.tick += 1;
     return state;
 }
@@ -115,11 +142,20 @@ function processInput(input, items, player_settings) {
 
         if (input[`${playerId}_thrust`]) {
             applyThrustForce(player);
+            const template = TEMPLATES.PARTICLES['thrust'];
+            for (let i of range(2)) {
+                items.projectiles.push(
+                    initParticle(template, player, {
+                        vx: Math.sin(player.angle-Math.PI) * (template.v + (Math.random() * template.random)),
+                        vy: Math.cos(player.angle-Math.PI) * (template.v + (Math.random() * template.random)),
+                    })
+                )
+            }
         }
 
         if (input[`${playerId}_shoot`]) {
             items.projectiles.push(
-                initProjectile(player, TEMPLATES.PROJECTILES[player.weapon])
+                initProjectile(TEMPLATES.PROJECTILES[player.weapon], player)
             );
         }
 
@@ -127,6 +163,9 @@ function processInput(input, items, player_settings) {
 }
 
 function applyForces(items) {
+    for (let item of items.particles) {
+        applyForceToItem(item);
+    }
     for (let item of [
         ...Object.values(items.players),
         ...items.projectiles,
@@ -151,15 +190,36 @@ function maintainHistory(u, maxHistory=3) {
     }
 }
 
-function expireProjectiles(projectiles, display) {
-    filterInPlace(projectiles, (p) => !(
-        p.x < 0 ||
-        p.y < 0 ||
-        p.x > display.width ||
-        p.y > display.height ||
-        p.expire-- == 0 ||
-        false
-    ))
+function expire(items, display) {
+    for (let array of [
+        items.particles,
+        items.projectiles,
+    ]) {
+        filterInPlace(array, (p) => !(
+            p.x < 0 ||
+            p.y < 0 ||
+            p.x > display.width ||
+            p.y > display.height ||
+            p.expire-- == 0 ||
+            false
+        ));
+    }
+}
+
+function bounce(items, display) {
+    for (let p of [
+        ...items.projectiles,
+        ...Object.values(items.players),
+    ]) {
+        if (p.x < 0 || p.x > display.width) {
+            p.x = Math.min(Math.max(p.x, 0), display.width);
+            p.vx = -p.vx * 0.7;
+        }
+        if (p.y < 0 || p.y > display.height) {
+            p.y = Math.min(Math.max(p.y, 0), display.height);
+            p.vy = -p.vy * 0.7;
+        }
+    }
 }
 
 function applyThrustForce(u) {

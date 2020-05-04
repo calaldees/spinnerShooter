@@ -14,6 +14,9 @@ export function render(ctx, state) {
 
     ctx.fillStyle = 'rgb(255, 255, 255)';
     ctx.strokeStyle = 'rgb(255, 255, 255)';
+    for (let p of state.items.particles) {
+        particle(ctx, p);
+    }
     for (let p of state.items.projectiles) {
         projectile(ctx, p);
     }
@@ -38,6 +41,11 @@ function ship(ctx, u) {
         y + Math.cos(angle) * s,
     );
     ctx.stroke();
+}
+
+function particle(ctx, p) {
+    const s = Math.floor(p.size / 2);
+    ctx.fillRect(p.x-s, p.y-s, p.size, p.size);
 }
 
 function projectile(ctx, p) {
