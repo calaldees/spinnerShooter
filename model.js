@@ -1,5 +1,9 @@
 import {range, filterInPlace} from './core.js';
 
+function spread(range) {
+    return (Math.random()*range)-(range/2);
+}
+
 const TEMPLATES = {
     ITEM: {
         x: 0,
@@ -10,14 +14,15 @@ const TEMPLATES = {
         fx: 0,
         fy: 0,
         mass: 0,
+        size: 1,
     },
     PARTICLES: {
         thrust: {
-            size: 1,
+            size: 5,
             mass: 1,
             decay_colors: [],  // TODO
             v: 3,
-            expire: 10,
+            expire: 20,
             random: 4,
         },
     },
@@ -67,6 +72,7 @@ function initPlayer(p) {
         angle: 0,  // angle
         thrust: 10,  // force
         mass: 50,
+        size: 20,
         x: p * 100,
         y: p * 100,
         weapon: 'bullet',
@@ -144,8 +150,10 @@ function processInput(input, items, player_settings) {
             applyThrustForce(player);
             const template = TEMPLATES.PARTICLES['thrust'];
             for (let i of range(2)) {
-                items.projectiles.push(
+                items.particles.push(
                     initParticle(template, player, {
+                        x: spread(player.size),
+                        y: spread(player.size),
                         vx: Math.sin(player.angle-Math.PI) * (template.v + (Math.random() * template.random)),
                         vy: Math.cos(player.angle-Math.PI) * (template.v + (Math.random() * template.random)),
                     })

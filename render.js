@@ -27,7 +27,7 @@ function ship(ctx, u) {
     const x = Math.floor(u.x);
     const y = Math.floor(u.y);
     const angle = u.angle;
-    const s = 20;
+    const s = u.size;
 
     ctx.fillStyle = 'white';
     ctx.beginPath();
@@ -46,6 +46,7 @@ function ship(ctx, u) {
 function particle(ctx, p) {
     const s = Math.floor(p.size / 2);
     ctx.fillRect(p.x-s, p.y-s, p.size, p.size);
+    ctx.fill();
 }
 
 function projectile(ctx, p) {
