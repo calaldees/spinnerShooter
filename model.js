@@ -1,8 +1,28 @@
-import {range, filterInPlace} from './core.js';
+import {range, filterInPlace, previousValueIterator, zip} from './core.js';
 
 function spread(range) {
     return (Math.random()*range)-(range/2);
 }
+function build_color_lookup(...ticks_color_pairs) {
+    return [...previousValueIterator(ticks_color_pairs)].reduce(
+        (acc, [ticks_color_pair_a, ticks_color_pair_b])=>{
+            const [tick_a, color_a] = ticks_color_pair_a || [0, null];
+            const [tick_b, color_b] = ticks_color_pair_b;
+            console.assert(tick_a <= tick_b);
+            for (const t of range(tick_b - tick_a)) {
+                const progress = t / (tick_b - tick_a);
+                acc.push(
+                    [...zip(color_a, color_b)].map(
+                        ([a, b])=>a+Math.floor((b-a) * progress)
+                    )
+                );
+            }
+            return acc;
+    }, []);
+}
+
+// if the matric taught us anyhting, it's that all kung fu is secrety code
+//Arnt all martial arts secretly code
 
 const TEMPLATES = {
     ITEM: {
@@ -20,7 +40,13 @@ const TEMPLATES = {
         thrust: {
             size: 5,
             mass: 1,
-            decay_colors: [],  // TODO
+            decay_colors: build_color_lookup(
+                [0 , [  0,   0,   0]],
+                [5 , [48,   48,  48]],
+                [10, [200,   0,   0]],
+                [15, [200, 200,   0]],
+                [20, [255, 255, 255]],
+            ),
             v: 3,
             expire: 20,
             random: 4,

@@ -44,6 +44,8 @@ function ship(ctx, u) {
 }
 
 function particle(ctx, p) {
+    const c = p.decay_colors[p.expire];
+    ctx.fillStyle = `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
     const s = Math.floor(p.size / 2);
     ctx.fillRect(p.x-s, p.y-s, p.size, p.size);
     ctx.fill();
