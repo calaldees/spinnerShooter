@@ -26,7 +26,9 @@ Technology
         * https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events
         * https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API
         * I don't know if browsers support multiple pointers. Investigation needed
-
+    * TODO:
+        * It may be possible to access 4 spinners with the new WebHID API
+            * https://web.dev/hid-examples/
 
 Design
 ------
