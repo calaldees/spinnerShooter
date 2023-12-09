@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link id="favicon" rel="shortcut icon" type="image/png" href="data:image/png;base64,....==" />
+    <title>Boilerplate</title>
+    <style>
+
+    /* styles here */
+
+    </style>
+</head>
+<body>
+    <h1>HTML Boilerplate</h1>
+
+    <!-- html here -->
+    <button id="hid_permission">Add HID Device</button>
+<script type="module">
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/WebHID_API
+
+// https://developer.chrome.com/docs/capabilities/hid
+if ("hid" in navigator) {
+    console.log("HID Supported")
+} else {
+    console.error("HID Unsupported in this browser")
+}
+
+
+document.getElementById("hid_permission").addEventListener("click", async ()=>{
+    const device = await navigator.hid.requestDevice({ filters: [] })
+})
+
+async function listHIDDevices() {
+    let devices = await navigator.hid.getDevices()
+    for (let device of devices) {
+        //device.oninputreport = (event) => {
+        device.addEventListener("inputreport", (event) => {
+            const { data, device, reportId } = event
+            console.log(device, data, reportId)
+
+            // Handle only the Joy-Con Right device and a specific report ID.
+            //if (device.productId !== 0x2007 && reportId !== 0x3f) return;
+
+            //const value = data.getUint8(0);
+            //if (value === 0) return;
+
+            //const someButtons = { 1: "A", 2: "X", 4: "B", 8: "Y" };
+            //console.log(`User pressed button ${someButtons[value]}.`);
+        })
+
+        console.log(`HID: ${device.productName}`, "adding listener", device)
+    }
+
+}
+listHIDDevices()
+
+
+</script>
+</body>
+</html>
