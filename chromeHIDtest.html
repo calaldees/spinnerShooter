@@ -19,7 +19,23 @@
 
     // https://developer.mozilla.org/en-US/docs/Web/API/WebHID_API
 
-// https://developer.chrome.com/docs/capabilities/hid
+    // https://developer.chrome.com/docs/capabilities/hid
+    // This article is fairly detailed - need to reread for debugging bits
+
+    // https://wicg.github.io/webhid/EXPLAINER.html
+    // USB docs
+    // https://usb.org/sites/default/files/hut1_4.pdf
+    // http://www.linux-usb.org/usb.ids
+
+
+    // OH NO! Looks like WebHID Keyboard and Mouse are prohibited
+    // This may mean 4 players can't happen :( NOOO!!!
+    // https://stackoverflow.com/questions/77194981/can-webhid-api-read-mice-or-keyboard-low-level-event-or-any-technology-to-get-lo
+    // https://github.com/WICG/webhid/blob/main/blocklist.txt
+    //
+    // Recompile chrome with this line removed
+    // https://github.com/WICG/webhid/blob/dd7938db31eed10fd698a682a2b66c8726a49086/blocklist.txt#L36
+
 if ("hid" in navigator) {
     console.log("HID Supported")
 } else {
@@ -31,11 +47,42 @@ document.getElementById("hid_permission").addEventListener("click", async ()=>{
     const device = await navigator.hid.requestDevice({ filters: [] })
 })
 
+function displayDeviceCollections(device) {
+    console.log("displayDeviceCollections:", device.productName)
+    for (let collection of device.collections) {
+        // An HID collection includes usage, usage page, reports, and subcollections.
+        console.log(`Usage: ${collection.usage}`);
+        console.log(`Usage page: ${collection.usagePage}`);
+        for (let inputReport of collection.inputReports) {
+            //console.log(`Input report: ${inputReport.reportId}`);
+            // Loop through inputReport.items
+            for (let i of inputReport.items){console.log('i',i)}
+        }
+        for (let outputReport of collection.outputReports) {
+            //console.log(`Output report: ${outputReport.reportId}`);
+            // Loop through outputReport.items
+            for (let o of outputReport.items){console.log('o',o)}
+        }
+        for (let featureReport of collection.featureReports) {
+            //console.log(`Feature report: ${featureReport.reportId}`);
+            // Loop through featureReport.items
+            for (let f of featureReport.items){console.log('f',f)}
+        }
+        // Loop through subcollections with collection.children
+        //for (let c of collection.children){console.log('c',c)}
+    }
+}
+
+
 async function listHIDDevices() {
     let devices = await navigator.hid.getDevices()
+    window.devices = devices
     for (let device of devices) {
-        //device.oninputreport = (event) => {
-        device.addEventListener("inputreport", (event) => {
+
+        displayDeviceCollections(device)
+
+        await device.open()
+        const handleInputReport = (event) => {
             const { data, device, reportId } = event
             console.log(device, data, reportId)
 
@@ -47,13 +94,20 @@ async function listHIDDevices() {
 
             //const someButtons = { 1: "A", 2: "X", 4: "B", 8: "Y" };
             //console.log(`User pressed button ${someButtons[value]}.`);
-        })
+        }
+        device.addEventListener("inputreport", handleInputReport)
+        //device.oninputreport = handleInputReport
 
         console.log(`HID: ${device.productName}`, "adding listener", device)
+
     }
 
+    //const dataView = await window.devices[0].receiveFeatureReport(/* reportId= */ 1)
+    //console.log(dataView)
 }
 listHIDDevices()
+
+
 
 
 </script>

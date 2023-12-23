@@ -23,10 +23,15 @@ Technology
     * TODO:
         * It may be possible to access 4 spinners with the new WebHID API
             * https://web.dev/hid-examples/
+            * Sadly not - mice are excempt - because low level divice access keyboard/mice are banned - 
+            * May a hardware alternative?
+                * https://blog.adafruit.com/2022/12/02/hid-remapper-allows-you-to-remap-inputs-from-mice-keyboards-and-other-devices-usb-piday-jfedorynski-raspberry_pi/
+            * or a software proxy to a game controller
 
 * WebGL 120fps?
     * https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API
     * https://web.dev/articles/webgl-fundamentals
+    * https://webgl2fundamentals.org/
 
 
 Design
