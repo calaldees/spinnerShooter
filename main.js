@@ -2,6 +2,8 @@ import {} from './core.js';
 import {initState, incrementModel} from './model.js';
 import {render} from './render.js';
 
+console.log("main.js")
+
 var running = true;
 var canvas;
 var ctx;
@@ -10,6 +12,7 @@ const state = initState();
 
 onmessage = function(event) {
     if (event.data.message == 'init') {
+        console.log("webworker init")
         canvas = event.data.canvas;
         ctx = canvas.getContext('2d', { alpha: false });
         state.settings.display.width = canvas.width;

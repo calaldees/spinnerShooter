@@ -1,5 +1,8 @@
+<!DOCTYPE html>
 <html>
 	<head>
+		<meta charset="utf-8" />
+		<link id="favicon" rel="shortcut icon" type="image/png" href="data:image/png;base64,....==" />
 		<title>spinnerShooter</title>
 		<style>
 			html, body {
@@ -25,8 +28,13 @@
 			canvas.width = window.innerWidth;
 			canvas.height = window.innerHeight;
 
+			console.log("init worker main.js")
 			const worker = new Worker("main.js", {type: "module"});
 			worker.postMessage({message: 'init', canvas: canvas}, [canvas]);
+
+			worker.onmessage = (e) => {
+				console.log("Message received from worker", e)
+			}
 
 			htmlCanvas.addEventListener('click', (e) => {
 				htmlCanvas.requestPointerLock();
@@ -68,6 +76,8 @@
 			// https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API
 			//document.addEventListener("mousemove", (e) => {
 			// https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events
+
+			console.log("index.html script end")
 		</script>
 	</body>
 </html>
