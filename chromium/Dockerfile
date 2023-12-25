@@ -5,7 +5,7 @@ FROM ubuntu:jammy
 RUN apt-get update && apt-get install -y \
     curl \
     git \
-    lsb_release \
+    lsb-release \
     python3 \
     sudo \
 && rm -rf /var/lib/apt/lists/*

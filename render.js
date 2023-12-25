@@ -1,4 +1,5 @@
-import {previousValueIterator} from './core.js';
+import {previousValueIterator, zip} from './core.js'
+import {ships} from './ships.js'
 
 export function render(ctx, state) {
 
@@ -29,18 +30,18 @@ function ship(ctx, u) {
     const angle = u.angle;
     const s = u.size;
 
-    ctx.fillStyle = 'white';
-    ctx.beginPath();
-    ctx.arc(x, y, s, 0, Math.PI*2, false);
-    ctx.fill();
+    const ship_paths = ships[2]
+    const colors = ['white', 'red']
 
-    ctx.strokeStyle = 'red';
-    ctx.moveTo(x, y);
-    ctx.lineTo(
-        x + Math.sin(angle) * s,
-        y + Math.cos(angle) * s,
-    );
-    ctx.stroke();
+    const t = ctx.getTransform()
+    ctx.translate(x,y)
+    ctx.rotate(-angle)
+    ctx.scale(s,s)
+    for (let [path, color] of zip(ship_paths, colors)) {
+        ctx.fillStyle = color
+        ctx.fill(path)
+    }
+    ctx.setTransform(t)
 }
 
 function particle(ctx, p) {
