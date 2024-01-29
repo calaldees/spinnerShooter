@@ -1,4 +1,5 @@
 # https://chromium.googlesource.com/chromium/src/+/main/docs/linux/build_instructions.md
+# https://bugs.chromium.org/p/chromium/issues/detail?id=1377520
 
 FROM ubuntu:jammy
 

@@ -40,10 +40,14 @@ function ship2() {
     let p
     
     p = new Path2D()
-    p.rect(-0.1,0.8,0.2,-1.6)
     p.arc(0, 0.8, 0.4, 0, Math.PI*2, false)
+    p.rect(-0.1,0.8,0.2,-1.6)
     p.moveTo(-1,0)
-    p.arc(0, 0, 1, 0, Math.PI, true)
+    p.moveTo(0,1)
+    p.arcTo(0, 0.8, 0.4, 0, Math.PI*2, false)
+    
+    //p.moveTo(-1,0)
+    //p.arc(0, 0, 1, 0, Math.PI, true)
     //p.arc(0, 0, 0.8, 0, Math.PI, false)
     //p.moveTo(0,0)
     //p.arc(0, 0, 0.8, 0, Math.PI, true)
