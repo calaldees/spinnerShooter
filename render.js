@@ -30,7 +30,7 @@ function ship(ctx, u) {
     const angle = u.angle;
     const s = u.size;
 
-    const ship_paths = ships[2]
+    const ship_paths = ships[3]
     const colors = ['white', 'red']
 
     const t = ctx.getTransform()
