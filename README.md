@@ -26,7 +26,8 @@ Technology
             * Sadly not - mice are excempt - because low level divice access keyboard/mice are banned - 
             * May a hardware alternative?
                 * https://blog.adafruit.com/2022/12/02/hid-remapper-allows-you-to-remap-inputs-from-mice-keyboards-and-other-devices-usb-piday-jfedorynski-raspberry_pi/
-            * or a software proxy to a game controller
+            * or a software proxy to -a game controller- websocket
+                * write a rust [nusb](https://github.com/kevinmehall/nusb) to websocket relay
 
 * WebGL 120fps?
     * https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API
